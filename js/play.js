@@ -1,5 +1,5 @@
 var BULLET_SPEED = 400;
-var PLAYER_SPEED = 60;
+var PLAYER_SPEED = 200;
 
 var play_state = {
 
@@ -38,9 +38,8 @@ var play_state = {
         this.blockPlayerTwo = this.add.sprite(500, 250, 'block-player');
         this.blockPlayerTwo.anchor.setTo(0.5, 0.5);
         this.movementDirectionPlayerTwo = 0;
-        this.blockPlayerTwo.enableBody = true;
-        this.blockPlayerTwo.physicsBodyType = Phaser.Physics.ARCADE;
-        this.movementDirectionPlayerTwo = 0;
+        // this.blockPlayerTwo.enableBody = true;
+        // this.blockPlayerTwo.physicsBodyType = Phaser.Physics.ARCADE;
         this.blockPlayerTwo.activeBullets = [];
         this.blockPlayerTwo.sidesActive = {
             '0' : true,
@@ -86,7 +85,7 @@ var play_state = {
                 this.rotatePlayer(this.blockPlayerOne, 'left');
                 this.movementDirectionPlayerOne = (((this.movementDirectionPlayerOne - 1) % 4) + 4) % 4;
             }
-        } else if(this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown) {
             if (!this.isRotatingOne) {
                 this.isRotatingOne = true;
                 this.rotatePlayer(this.blockPlayerOne, 'right');
@@ -95,14 +94,14 @@ var play_state = {
         } else if (this.cursors.left.isUp) {
             this.isRotatingOne = false;
         }
-        if(game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             if (!this.isRotatingTwo) {
                 this.isRotatingTwo = true;
                 this.rotatePlayer(this.blockPlayerTwo, 'left');
                 this.movementDirectionPlayerTwo = (((this.movementDirectionPlayerTwo - 1) % 4) + 4) % 4;
             }
         }
-        if(game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
             if (!this.isRotatingTwo) {
                 this.isRotatingTwo = true;
                 this.rotatePlayer(this.blockPlayerTwo, 'right');
@@ -119,46 +118,48 @@ var play_state = {
     hitPlayerTwo: function(body1, bullet) {
         //TODO : check to see which side got hit and then
         // either add another bullet stream or end the game
-        // console.log(body1.body.rotation);
-        // console.log(body1.body.angle);
         bullet.kill();
+        var degree = (body1.body.angle * 180) / Math.PI;
+        var orientation = (((degree / 90) % 4) + 4) % 4;
+        var bulletAngle;
+
+
+
+        var stringNumber;
         if (body1.body.touching.left) {
-            var degree = (body1.body.angle * 180) / Math.PI;
-            var orientation = (((degree / 90) % 4) + 4) % 4;
-
             var leftEq = (((2- orientation) % 4) + 4) % 4;
-
-;
-            var stringNumber = leftEq.toString();
-            console.log(orientation);
-            if (!(body1.sidesActive[stringNumber])) {
-                if (body1.nonActiveBullets.length > 0) {
-                    var bullet = body1.nonActiveBullets.pop();
-                    bullet.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-                    bullet.bulletSpeed = BULLET_SPEED;
-                    bullet.fireRate = 200;
-                    bullet.fireAngle = 180;
-                    bullet.autofire = true;
-                    bullet.trackSprite(this.blockPlayerTwo, 0, 0);
-                    this.blockPlayerTwo.activeBullets.push(bullet);
-
-                    this.blockPlayerTwo.sidesActive[stringNumber] = true;
-                    // this.bulletTwoAlt.trackRotation = true;
-                }
-                // this.bulletTwoAlt.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-                // this.bulletTwoAlt.bulletSpeed = BULLET_SPEED;
-                // this.bulletTwoAlt.fireRate = 200;
-                // this.bulletTwoAlt.fireAngle = 180;
-                // this.bulletTwoAlt.autofire = true;
-                // this.bulletTwoAlt.trackSprite(this.blockPlayerTwo, 0, 0);
-                // this.blockPlayerTwo.activeBullets.push(this.bulletTwoAlt);
-                // // this.bulletTwoAlt.trackRotation = true;
-            }
-
+            stringNumber = leftEq.toString();
+            bulletAngle = 180;
         } else if (body1.body.touching.right) {
-
+            var rightEq = (((4- orientation) % 4) + 4) % 4;
+            stringNumber = rightEq.toString();
+            bulletAngle = 0;
+        } else if (body1.body.touching.up) {
+            var upEq = (((3- orientation) % 4) + 4) % 4;
+            stringNumber = upEq.toString();
+            bulletAngle = -90;
+        } else if (body1.body.touching.down) {
+            var downEq = (((1- orientation) % 4) + 4) % 4;
+            stringNumber = downEq.toString();
+            bulletAngle = 90;
         }
-        // console.log(body2);
+
+        //Adding the bullet
+        if (stringNumber && !(body1.sidesActive[stringNumber])) {
+            if (body1.nonActiveBullets.length > 0) {
+                var bullet = body1.nonActiveBullets.pop();
+                bullet.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+                bullet.bulletSpeed = BULLET_SPEED;
+                bullet.fireRate = 200;
+                bullet.fireAngle = bulletAngle;
+                bullet.autofire = true;
+                bullet.trackSprite(this.blockPlayerTwo, 0, 0);
+                this.blockPlayerTwo.activeBullets.push(bullet);
+
+                this.blockPlayerTwo.sidesActive[stringNumber] = true;
+                // this.bulletTwoAlt.trackRotation = true;
+            }
+        }
     },
 
     //Rotating the player

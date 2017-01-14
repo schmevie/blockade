@@ -38,8 +38,6 @@ var play_state = {
         this.blockPlayerTwo = this.add.sprite(500, 250, 'block-player');
         this.blockPlayerTwo.anchor.setTo(0.5, 0.5);
         this.movementDirectionPlayerTwo = 0;
-        // this.blockPlayerTwo.enableBody = true;
-        // this.blockPlayerTwo.physicsBodyType = Phaser.Physics.ARCADE;
         this.blockPlayerTwo.activeBullets = [];
         this.blockPlayerTwo.sidesActive = {
             '0' : true,
@@ -71,7 +69,12 @@ var play_state = {
         this.blockPlayerTwo.activeBullets.push(this.bulletTwo);
 
         game.physics.arcade.enable([this.blockPlayerOne, this.blockPlayerTwo]);
+
+        this.blockPlayerOne.body.collideWorldBounds = true;
+
+
         this.blockPlayerTwo.body.immovable = true;
+        this.blockPlayerTwo.body.collideWorldBounds = true;
 
 
     },
@@ -153,10 +156,10 @@ var play_state = {
                 bullet.fireRate = 200;
                 bullet.fireAngle = bulletAngle;
                 bullet.autofire = true;
-                bullet.trackSprite(this.blockPlayerTwo, 0, 0);
-                this.blockPlayerTwo.activeBullets.push(bullet);
+                bullet.trackSprite(body1, 0, 0);
+                body1.activeBullets.push(bullet);
 
-                this.blockPlayerTwo.sidesActive[stringNumber] = true;
+                body1.sidesActive[stringNumber] = true;
                 // this.bulletTwoAlt.trackRotation = true;
             }
         }

@@ -22,6 +22,10 @@ var play_state = {
         this.bulletTwoAltTwo = game.add.weapon(30, 'bullet-two-alt');
         this.bulletTwoAltThree = game.add.weapon(30, 'bullet-two-alt');
 
+        this.bulletOneAltOne = game.add.weapon(30, 'bullet-alt-one');
+        this.bulletOneAltTwo = game.add.weapon(30, 'bullet-alt-one');
+        this.bulletOneAltThree = game.add.weapon(30, 'bullet-alt-one');
+
         //PLAYER  ONE
         this.blockPlayerOne = this.add.sprite(200, 250, 'block-player');
         this.blockPlayerOne.anchor.setTo(0.5, 0.5);
@@ -33,6 +37,7 @@ var play_state = {
             '2' : false,
             '3' : false
         };
+        this.blockPlayerOne.nonActiveBullets = [this.bulletOneAltOne, this.bulletOneAltTwo, this.bulletOneAltThree];
 
         //PLAYER TWO
         this.blockPlayerTwo = this.add.sprite(500, 250, 'block-player');
@@ -80,7 +85,16 @@ var play_state = {
     },
 
     update: function() {
-        game.physics.arcade.collide(this.blockPlayerTwo, this.bulletOne.bullets, this.hitPlayerTwo, null, this);
+        game.physics.arcade.collide(this.blockPlayerTwo, this.bulletOne.bullets, this.hitPlayer, null, this);
+        game.physics.arcade.collide(this.blockPlayerOne, this.bulletTwo.bullets, this.hitPlayer, null, this);
+        //Player 1 main bullets with player 2 main bullets
+        game.physics.arcade.collide(this.bulletOne.bullets, this.bulletTwo.bullets, this.bulletCollide, null, this);
+        //Player 1 main bullets with player 2 secondary bullets
+        game.physics.arcade.collide(this.bulletOne.bullets, this.bulletTwoAltOne.bullets, this.bulletCollide, null, this);
+        //Player 1 main bullets with player 2 thrid bullets
+        game.physics.arcade.collide(this.bulletOne.bullets, this.bulletTwoAltTwo.bullets, this.bulletCollide, null, this);
+        //Player 1 main bullets with player 2 fourth bullets
+        game.physics.arcade.collide(this.bulletOne.bullets, this.bulletTwoAltThree.bullets, this.bulletCollide, null, this);
         
         if (this.cursors.left.isDown) {
             if (!this.isRotatingOne) {
@@ -113,12 +127,12 @@ var play_state = {
         } else if (!game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.isRotatingTwo = false;
         }
-        // this.movePlayer(this.blockPlayerOne, this.movementDirectionPlayerOne);
+        this.movePlayer(this.blockPlayerOne, this.movementDirectionPlayerOne);
         this.movePlayer(this.blockPlayerTwo, this.movementDirectionPlayerTwo);
     },
 
     //Callback if Player two is hit
-    hitPlayerTwo: function(body1, bullet) {
+    hitPlayer: function(body1, bullet) {
         //TODO : check to see which side got hit and then
         // either add another bullet stream or end the game
         bullet.kill();
@@ -163,6 +177,13 @@ var play_state = {
                 // this.bulletTwoAlt.trackRotation = true;
             }
         }
+    },
+
+    //Callback if two bullets collide
+    bulletCollide: function(bullet1, bullet2) {
+
+        bullet1.kill();
+        bullet2.kill();
     },
 
     //Rotating the player

@@ -1,0 +1,27 @@
+{
+  "name": "blockade",
+  "version": "1.0.0",
+  "description": "Blockade ======== Run `npm install` followed by `gulp dev` to start the server.",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "browser-sync": "^2.18.6"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.6",
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmevie/blockade.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/schmevie/blockade/issues"
+  },
+  "homepage": "https://github.com/schmevie/blockade#readme"
+}

@@ -27,7 +27,7 @@ var play_state = {
         this.bulletOneAltThree = game.add.weapon(30, 'bullet-alt-one');
 
         //PLAYER  ONE
-        this.blockPlayerOne = this.add.sprite(200, 250, 'block-player');
+        this.blockPlayerOne = this.add.sprite(100, 250, 'block-player');
         this.blockPlayerOne.anchor.setTo(0.5, 0.5);
         this.movementDirectionPlayerOne = 0;
         this.blockPlayerOne.activeBullets = [];
@@ -73,20 +73,34 @@ var play_state = {
         // this.bulletTwo.trackRotation = true;
         this.blockPlayerTwo.activeBullets.push(this.bulletTwo);
 
-        game.physics.arcade.enable([this.blockPlayerOne, this.blockPlayerTwo]);
+        //WALLS
+        this.wallOne = this.add.sprite(150, 150, 'wall-1');
+        this.wallTwo = this.add.sprite(500, 0, 'wall-2');
+        this.wallThree = this.add.sprite(530, 350, 'wall-3');
+
+        game.physics.arcade.enable([this.blockPlayerOne, this.blockPlayerTwo, this.wallOne, this.wallTwo, this.wallThree]);
 
         this.blockPlayerOne.body.collideWorldBounds = true;
 
 
-        this.blockPlayerTwo.body.immovable = true;
+        // this.blockPlayerTwo.body.immovable = true;
         this.blockPlayerTwo.body.collideWorldBounds = true;
+
+        this.wallOne.body.immovable = true;
+        this.wallTwo.body.immovable = true;
+        this.wallThree.body.immovable = true;
 
 
     },
 
     update: function() {
+        //Player to player
         game.physics.arcade.collide(this.blockPlayerTwo, this.bulletOne.bullets, this.hitPlayer, null, this);
         game.physics.arcade.collide(this.blockPlayerOne, this.bulletTwo.bullets, this.hitPlayer, null, this);
+
+        //players to walls
+        game.physics.arcade.collide(this.blockPlayerOne, [this.wallOne, this.wallTwo, this.wallThree]);
+        game.physics.arcade.collide(this.blockPlayerTwo, [this.wallOne, this.wallTwo, this.wallThree]);
         //Player 1 main bullets with player 2 main bullets
         game.physics.arcade.collide(this.bulletOne.bullets, this.bulletTwo.bullets, this.bulletCollide, null, this);
         //Player 1 main bullets with player 2 secondary bullets

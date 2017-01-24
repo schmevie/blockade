@@ -11,6 +11,6 @@ var menu_state = {
 
     // Start the actual game
     start: function() {
-        this.game.state.start('play');
+        this.game.state.start('countdown');
     }
 };
